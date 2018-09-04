@@ -51,6 +51,7 @@ int levinshtein_fill_number(int left, int diag, int top, bool equal)
     return res;
     //qDebug() << min_number;
 }
+
 int levinshtein_matrix(QString s1, QString s2)
 {
     int len_s1 = s1.length();
@@ -94,12 +95,51 @@ int levinshtein_matrix(QString s1, QString s2)
     return res;
 }
 
+int levinshtein_matrix_recur(QString s1, QString s2)
+{
+    qDebug() << s1 << s2 << "\n";
+    int len_s1 = s1.length();
+    int len_s2 = s2.length();
+
+    if (len_s1 == 0)
+        return len_s2;
+    if (len_s2 == 0)
+        return len_s1;
+
+
+    if (len_s1 == 1)
+    {
+        if (s1[0] != s2[len_s2-1])
+            return len_s2;
+        else
+            return len_s2 - 1;
+    }
+    if (len_s2 == 1)
+    {
+        if (s1[len_s1-1] != s2[0])
+            return len_s1;
+        else
+            return len_s1 - 1;
+    }
+    int pen = 0;
+    if (s1[len_s1-1] != s2[len_s2-1])
+        pen++;
+    return std::min(levinshtein_matrix_recur( s1.left(len_s1-1),  s2) + 1,
+                    std::min(levinshtein_matrix_recur( s1, s2.left(len_s2-1)) + 1,
+                             levinshtein_matrix_recur( s1.left(len_s1-1), s2.left(len_s2-1)) + pen));
+}
+
+
+
 int main()
 {
-    //QString s1 = "тартар"; QString s2 = "отара";
-    //QString s1 = "МГТУ"; QString s2 = "МГУ";
+    //QString s1 = "tartar"; QString s2 = "otara";
+    QString s1 = "MGTU"; QString s2 = "MGU";
     //QString s1 = "увлечение"; QString s2 = "развлечения";
     //QString s1 = "увлечение"; QString s2 = "";
-    int res = levinshtein_matrix(s1, s2);
-    std::cout << "Levenshtein Distance = " << res;
+    int res1 = levinshtein_matrix(s1, s2);
+    std::cout << "Levenshtein Distance = " << res1 << "\n";
+    int res = levinshtein_matrix_recur(s1, s2);
+    std::cout << "Levenshtein Distance recur = " << res;
+    //qDebug() << s1[];
 }
