@@ -140,7 +140,7 @@ int levinshtein_damerau_matrix(QString s1, QString s2)
     {
         std::cout << str_matrix2[i] << " ";
     }*/
-    std::cout << "\n";
+    //std::cout << "\n";
     int res = str_matrix2[len_s2];
     free(str_matrix1);
     free(str_matrix2);
@@ -195,12 +195,15 @@ unsigned long long tick(void)
 void time_tests()
 {
     srand(time(NULL));
-    unsigned long long tb, te, t_mid1 = 0, t_mid2 = 0;
+    unsigned long long tb, te, t_mid1 = 0;
     QString s1 = "";
     QString s2 = "";
     int number_of_tests = 10;
     int number_of_tests_check = 10;
     int ans ;
+
+    /*******************/
+    std::cout << "Matrix method\n";
     for (int i = 1; i < number_of_tests + 1; i++)
     {
         for (int j = 0; j < i * 10; j++)
@@ -213,45 +216,68 @@ void time_tests()
         for (int j = 0; j < number_of_tests_check; j++)
         {
            ans = levinshtein_matrix(s1, s2);
-
         }
         te = tick();
         t_mid1 = (te - tb)/number_of_tests_check;
 
+        std::cout << "length = " << i * 10 << " - time: " <<  t_mid1 << "\n";
+        s1 = "";
+        s2 = "";
+    }
+
+    /***************/
+    std::cout << "Recur method\n";
+    for (int i = 1; i < number_of_tests + 1; i++)
+    {
+        for (int j = 0; j < i; j++)
+        {
+            s1.append('a' + rand() % ('z' - 'a'));
+            s2.append('a' + rand() % ('z' - 'a'));
+        }
         tb = tick();
         for (int j = 0; j < number_of_tests_check; j++)
         {
            ans = levinshtein_recur(s1, s2);
         }
         te = tick();
-        t_mid2 = (te - tb)/number_of_tests_check;
+        t_mid1 = (te - tb)/number_of_tests_check;
 
         //qDebug() << s1 << s2 << "\n";
+
+        std::cout << "length = " << i << " - Recur method: " <<  t_mid1 << "\n";
         s1 = "";
         s2 = "";
-        std::cout << "length = " << i * 10 << "\nMatrix method: " <<  t_mid1 << "\nRecur method: " <<  t_mid2 << "\n";
     }
-}
-int main()
-{
-    time_tests();
+    std::cout << "End test\n";
+
+
 }
 /*
 int main()
 {
+    time_tests();
+}
+*/
+int main()
+{
+    QString s1; QString s2;
+    std::cout << "Enter first string: ";
+    QTextStream qtin(stdin);
+    s1 = qtin.readLine();
+    std::cout << "Enter second string: ";
+    QTextStream qtin2(stdin);
+    s2 = qtin2.readLine();
+
     //QString s1 = "tartar"; QString s2 = "otara";
-    QString s1 = "mu"; QString s2 = "um";
+    //QString s1 = "mu"; QString s2 = "um";
     //QString s1 = "увлечение"; QString s2 = "развлечения";
     //QString s1 = "uvlecenie"; QString s2 = "razvleceniy";
     //QString s1 = "увлечение"; QString s2 = "";
     int res1 = levinshtein_matrix(s1, s2);
-    std::cout << "Levenshtein Distance = " << res1 << "\n";
+    std::cout << "Levenshtein distance (matrix) = " << res1 << "\n";
     int res2 = levinshtein_recur(s1, s2);
-    std::cout << "Levenshtein Distance recur = " << res2 << "\n" ;
-
+    std::cout << "Levenshtein distance (recur) = " << res2 << "\n" ;
     int res3 = levinshtein_damerau_matrix(s1, s2);
-    std::cout << "levinshtein_damerau_matrix Distance = " << res3;
-
-    //qDebug() << s1[];
+    std::cout << "Levinshtein-Damerau distance (matrix)  = " << res3;
 }
-*/
+
